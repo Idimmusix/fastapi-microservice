@@ -6,9 +6,8 @@ from decouple import config
 from contextlib import contextmanager
 
 
-def get_db_engine():
-
-    DB_TYPE = config("DB_TYPE")
+DB_TYPE = config("DB_TYPE")
+def get_db_url():
     DB_NAME = config("DB_NAME")
     DB_USER = config("DB_USER")
     DB_PASSWORD = config("DB_PASSWORD")
@@ -21,16 +20,21 @@ def get_db_engine():
 
     if DB_TYPE == "mysql":
         DATABASE_URL = f'mysql+{MYSQL_DRIVER}://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
+        return DATABASE_URL
     elif DB_TYPE == "postgresql":
         DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+        return DATABASE_URL
     else:
         DATABASE_URL = "sqlite:///./database.db"
+    return DATABASE_URL
 
+
+def get_db_engine():
     if DB_TYPE == "sqlite":
-        db_engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+        db_engine = create_engine(get_db_url(), connect_args={"check_same_thread": False})
     else:
         # db_engine = create_engine(DATABASE_URL)
-        db_engine = create_engine(DATABASE_URL, pool_size=DB_POOL_SIZE, max_overflow=DB_MAX_OVERFLOW)
+        db_engine = create_engine(get_db_url(), pool_size=DB_POOL_SIZE, max_overflow=DB_MAX_OVERFLOW)
     
     return db_engine
 

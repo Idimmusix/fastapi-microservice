@@ -1,4 +1,3 @@
-
 import datetime as datetime
 import passlib.hash as _hash
 from sqlalchemy.schema import Column

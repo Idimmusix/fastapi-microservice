@@ -23,6 +23,23 @@ def create_access_token(data:dict):
 
     return encoded_jwt
 
+def verify_token(token: str, credentials_exception, db: orm.Session):
+    try:
+        if not token:
+            raise fastapi.HTTPException(
+                    status_code = 401, detail="expired or invalid token")
+        payload = jwt.decode(token, SECRET, algorithms=[ALGORITHM])
+        id: str = payload.get("user_id")
+        #user = db.query(user_models.User).filter(user_models.User.id == id).first()
 
+        #if user is None:
+        #    raise fastapi.HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
+        #email = user.email
 
+        if id is None:
+            raise credentials_exception
+        token_data = auth_schemas.TokenData(email=email, id=id)
+    except JWTError:
+        raise credentials_exception
 
+    return token_data
