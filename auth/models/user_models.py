@@ -1,9 +1,9 @@
 import datetime as datetime
-import passlib.hash as _hash
+# import passlib.hash as _hash
 from sqlalchemy.schema import Column
 from sqlalchemy.types import String, DateTime, Boolean, Text
 from uuid import uuid4
-from ..db.database import Base
+from db.database import Base
 from sqlalchemy.orm import relationship
 
 
@@ -29,8 +29,8 @@ class User(Base):
     last_updated = Column(DateTime, nullable=False, default=datetime.datetime.utcnow)
     last_updated_db = Column(DateTime, nullable=False, default=datetime.datetime.utcnow)
 
-    def verify_password(self, password: str):
-        return _hash.sha256_crypt.verify(password, self.password_hash)
+    # def verify_password(self, password: str):
+    #     return _hash.sha256_crypt.verify(password, self.password_hash)
     
 
 

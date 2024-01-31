@@ -21,7 +21,7 @@ class User(UserBase):
     has_password: Optional[bool]
     is_verified: bool
     is_superuser: bool
-    org_user: Optional[List[OrgUser]]
+    #org_user: Optional[List[OrgUser]]
     country_code: Optional[str]
     image_url: Optional[str] 
     is_deleted: bool
@@ -43,6 +43,14 @@ class UserUpdate(UserBase):
     last_name: Optional[str]
     phone_number: Optional[str]
     password: Optional[str]
+
+    class Config:
+        orm_mode = True
+        
+class UserCreate(UserBase):
+    password: str
+    first_name: str
+    last_name: str
 
     class Config:
         orm_mode = True
@@ -103,14 +111,6 @@ class UserTokenVerification(BaseModel):
 class UserCodeVerification(BaseModel):
     email: str
     code_length: Optional[int] = Field(None, title="This is the length of the verification code, which is 6 by default", example=5)
-
-class UserCreate(UserBase):
-    password: str
-    first_name: str
-    last_name: str
-
-    class Config:
-        orm_mode = True
 
 
 class UserInfo(UserBase):
